@@ -31,8 +31,16 @@ kratos run
 ## 系统模块
 
 - [ ] 仓库管理
+  - [ ] 仓库列表
+  - [ ] 新增仓库
+  - [ ] 修改仓库
+  - [ ] 删除仓库
+  - [ ] 授权用户
 - [ ] 用户管理
-- [ ] 组织管理
+  - [ ] 登录
+- [ ] Star管理
+  - [ ] Star项目列表
+- [ ] GIT服务
 
 ## 快速体验GIT远程仓库
 
@@ -63,3 +71,11 @@ git remote add origin root@119.27.164.148:/root/git-test/hello.git
 # 推送本地代码到远程仓库
 git push -u origin master
 ```
+
+## Git 远程仓库的其他实现
+1. 使用git守护进程
+```shell
+git daemon --export-all --verbose --base-path=. --export-all --port=9091 --enable=receive-pack 
+```
+
+2. 使用http-backend
