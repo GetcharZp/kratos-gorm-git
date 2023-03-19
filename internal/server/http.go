@@ -1,6 +1,7 @@
 package server
 
 import (
+	"kratos-gorm-git/api/git"
 	v1 "kratos-gorm-git/api/helloworld/v1"
 	"kratos-gorm-git/internal/conf"
 	"kratos-gorm-git/internal/service"
@@ -28,5 +29,6 @@ func NewHTTPServer(c *conf.Server, greeter *service.GreeterService, logger log.L
 	}
 	srv := http.NewServer(opts...)
 	v1.RegisterGreeterHTTPServer(srv, greeter)
+	git.RegisterUserHTTPServer(srv, service.NewUserService())
 	return srv
 }

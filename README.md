@@ -28,6 +28,17 @@ kratos new kratos-gorm-git
 kratos run
 ```
 
+## 相关命令
+```shell
+# 用户模块
+# 创建 user.proto
+kratos proto add api/git/user.proto
+# 创建 PB
+kratos proto client api/git/user.proto
+# 生成 Service
+kratos proto server api/git/user.proto t internal/service
+```
+
 ## 系统模块
 
 - [ ] 仓库管理
