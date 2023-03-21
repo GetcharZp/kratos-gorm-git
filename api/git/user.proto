@@ -11,7 +11,8 @@ option java_package = "api.git";
 service User {
 	rpc Login (LoginRequest) returns (LoginReply) {
 		option (google.api.http) = {
-			get: "/login"
+			post: "/login",
+			body: "*"
 		};
 	};
 }
@@ -21,4 +22,6 @@ message LoginRequest {
 	string username = 1; // 用户名
 	string password = 2; // 密码
 }
-message LoginReply {}
+message LoginReply {
+	string token = 1; // token
+}

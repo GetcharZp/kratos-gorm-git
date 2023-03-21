@@ -3,6 +3,7 @@ package main
 import (
 	"flag"
 	"github.com/go-kratos/kratos/v2"
+	"kratos-gorm-git/models"
 	"os"
 
 	"kratos-gorm-git/internal/conf"
@@ -71,6 +72,11 @@ func main() {
 
 	var bc conf.Bootstrap
 	if err := c.Scan(&bc); err != nil {
+		panic(err)
+	}
+	// init db
+	err := models.NewDB(bc.Data.Database.Source)
+	if err != nil {
 		panic(err)
 	}
 

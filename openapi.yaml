@@ -7,19 +7,16 @@ info:
     version: 0.0.1
 paths:
     /login:
-        get:
+        post:
             tags:
                 - User
             operationId: User_Login
-            parameters:
-                - name: username
-                  in: query
-                  schema:
-                    type: string
-                - name: password
-                  in: query
-                  schema:
-                    type: string
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/LoginRequest'
+                required: true
             responses:
                 "200":
                     description: OK
@@ -45,7 +42,16 @@ components:
             description: Contains an arbitrary serialized message along with a @type that describes the type of the serialized message.
         LoginReply:
             type: object
-            properties: {}
+            properties:
+                token:
+                    type: string
+        LoginRequest:
+            type: object
+            properties:
+                username:
+                    type: string
+                password:
+                    type: string
         Status:
             type: object
             properties:

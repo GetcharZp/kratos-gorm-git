@@ -48,7 +48,7 @@ kratos proto server api/git/user.proto t internal/service
   - [ ] 删除仓库
   - [ ] 授权用户
 - [ ] 用户管理
-  - [ ] 登录
+  - [x] 登录
 - [ ] Star管理
   - [ ] Star项目列表
 - [ ] GIT服务
