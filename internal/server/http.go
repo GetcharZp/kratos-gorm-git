@@ -1,10 +1,12 @@
 package server
 
 import (
+	"github.com/go-kratos/kratos/v2/middleware/selector"
 	"kratos-gorm-git/api/git"
 	v1 "kratos-gorm-git/api/helloworld/v1"
 	"kratos-gorm-git/internal/conf"
 	"kratos-gorm-git/internal/service"
+	"kratos-gorm-git/middleware"
 
 	"github.com/go-kratos/kratos/v2/log"
 	"github.com/go-kratos/kratos/v2/middleware/recovery"
@@ -16,6 +18,7 @@ func NewHTTPServer(c *conf.Server, greeter *service.GreeterService, logger log.L
 	var opts = []http.ServerOption{
 		http.Middleware(
 			recovery.Recovery(),
+			selector.Server(middleware.Auth()).Build(),
 		),
 	}
 	if c.Http.Network != "" {
