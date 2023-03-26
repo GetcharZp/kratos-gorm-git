@@ -1,0 +1,49 @@
+syntax = "proto3";
+
+package api.git;
+
+import "google/api/annotations.proto";
+option go_package = "kratos-gorm-git/api/git;git";
+option java_multiple_files = true;
+option java_package = "api.git";
+
+service Repo {
+	rpc CreateRepo (CreateRepoRequest) returns (CreateRepoReply);
+	rpc UpdateRepo (UpdateRepoRequest) returns (UpdateRepoReply);
+	rpc DeleteRepo (DeleteRepoRequest) returns (DeleteRepoReply);
+	rpc GetRepo (GetRepoRequest) returns (GetRepoReply);
+	rpc ListRepo (ListRepoRequest) returns (ListRepoReply) {
+		option (google.api.http) = {
+			get: "/repo/list",
+		};
+	}
+}
+
+message CreateRepoRequest {}
+message CreateRepoReply {}
+
+message UpdateRepoRequest {}
+message UpdateRepoReply {}
+
+message DeleteRepoRequest {}
+message DeleteRepoReply {}
+
+message GetRepoRequest {}
+message GetRepoReply {}
+
+message ListRepoRequest {
+	int64 page = 1; // 当前页码
+	int64 size = 2; // 每页返回的个数
+}
+message ListRepoReply {
+	int64 cnt = 1; // 总个数
+	repeated ListRepoItem list = 2; // 仓库列表
+}
+
+message ListRepoItem {
+	string identity = 1; // 唯一标识
+	string name = 2;
+	string desc = 3;
+	string path = 4;
+	int64 star = 5;
+}

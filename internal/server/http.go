@@ -33,5 +33,6 @@ func NewHTTPServer(c *conf.Server, greeter *service.GreeterService, logger log.L
 	srv := http.NewServer(opts...)
 	v1.RegisterGreeterHTTPServer(srv, greeter)
 	git.RegisterUserHTTPServer(srv, service.NewUserService())
+	git.RegisterRepoHTTPServer(srv, service.NewRepoService())
 	return srv
 }

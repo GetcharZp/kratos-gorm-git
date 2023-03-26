@@ -37,12 +37,20 @@ kratos proto add api/git/user.proto
 kratos proto client api/git/user.proto
 # 生成 Service
 kratos proto server api/git/user.proto t internal/service
+
+# 仓库模块
+# 创建 repo.proto
+kratos proto add api/git/repo.proto
+# 创建 PB
+kratos proto client api/git/repo.proto
+# 生成 Service
+kratos proto server api/git/repo.proto t internal/service
 ```
 
 ## 系统模块
 
 - [ ] 仓库管理
-  - [ ] 仓库列表
+  - [x] 仓库列表
   - [ ] 新增仓库
   - [ ] 修改仓库
   - [ ] 删除仓库
