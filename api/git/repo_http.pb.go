@@ -19,15 +19,37 @@ var _ = binding.EncodeURL
 
 const _ = http.SupportPackageIsVersion1
 
+const OperationRepoCreateRepo = "/api.git.Repo/CreateRepo"
 const OperationRepoListRepo = "/api.git.Repo/ListRepo"
 
 type RepoHTTPServer interface {
+	CreateRepo(context.Context, *CreateRepoRequest) (*CreateRepoReply, error)
 	ListRepo(context.Context, *ListRepoRequest) (*ListRepoReply, error)
 }
 
 func RegisterRepoHTTPServer(s *http.Server, srv RepoHTTPServer) {
 	r := s.Route("/")
+	r.POST("/repo/create", _Repo_CreateRepo0_HTTP_Handler(srv))
 	r.GET("/repo/list", _Repo_ListRepo0_HTTP_Handler(srv))
+}
+
+func _Repo_CreateRepo0_HTTP_Handler(srv RepoHTTPServer) func(ctx http.Context) error {
+	return func(ctx http.Context) error {
+		var in CreateRepoRequest
+		if err := ctx.Bind(&in); err != nil {
+			return err
+		}
+		http.SetOperation(ctx, OperationRepoCreateRepo)
+		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
+			return srv.CreateRepo(ctx, req.(*CreateRepoRequest))
+		})
+		out, err := h(ctx, &in)
+		if err != nil {
+			return err
+		}
+		reply := out.(*CreateRepoReply)
+		return ctx.Result(200, reply)
+	}
 }
 
 func _Repo_ListRepo0_HTTP_Handler(srv RepoHTTPServer) func(ctx http.Context) error {
@@ -50,6 +72,7 @@ func _Repo_ListRepo0_HTTP_Handler(srv RepoHTTPServer) func(ctx http.Context) err
 }
 
 type RepoHTTPClient interface {
+	CreateRepo(ctx context.Context, req *CreateRepoRequest, opts ...http.CallOption) (rsp *CreateRepoReply, err error)
 	ListRepo(ctx context.Context, req *ListRepoRequest, opts ...http.CallOption) (rsp *ListRepoReply, err error)
 }
 
@@ -59,6 +82,19 @@ type RepoHTTPClientImpl struct {
 
 func NewRepoHTTPClient(client *http.Client) RepoHTTPClient {
 	return &RepoHTTPClientImpl{client}
+}
+
+func (c *RepoHTTPClientImpl) CreateRepo(ctx context.Context, in *CreateRepoRequest, opts ...http.CallOption) (*CreateRepoReply, error) {
+	var out CreateRepoReply
+	pattern := "/repo/create"
+	path := binding.EncodeURL(pattern, in, false)
+	opts = append(opts, http.Operation(OperationRepoCreateRepo))
+	opts = append(opts, http.PathTemplate(pattern))
+	err := c.cc.Invoke(ctx, "POST", path, in, &out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return &out, err
 }
 
 func (c *RepoHTTPClientImpl) ListRepo(ctx context.Context, in *ListRepoRequest, opts ...http.CallOption) (*ListRepoReply, error) {

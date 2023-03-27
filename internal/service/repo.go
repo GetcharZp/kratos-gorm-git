@@ -2,7 +2,9 @@ package service
 
 import (
 	"context"
+	"errors"
 	pb "kratos-gorm-git/api/git"
+	"kratos-gorm-git/helper"
 	"kratos-gorm-git/models"
 )
 
@@ -15,6 +17,27 @@ func NewRepoService() *RepoService {
 }
 
 func (s *RepoService) CreateRepo(ctx context.Context, req *pb.CreateRepoRequest) (*pb.CreateRepoReply, error) {
+	// 1. 查重
+	var cnt int64
+	err := models.DB.Model(new(models.RepoBasic)).Where("path = ?", req.Path).Count(&cnt).Error
+	if err != nil {
+		return nil, err
+	}
+	if cnt > 0 {
+		return nil, errors.New("路径已存在")
+	}
+	// 2. 落库
+	rb := &models.RepoBasic{
+		Identity: helper.GetUUID(),
+		Path:     req.Path,
+		Name:     req.Name,
+		Desc:     req.Desc,
+		Type:     int(req.Type),
+	}
+	err = models.DB.Create(rb).Error
+	if err != nil {
+		return nil, err
+	}
 	return &pb.CreateRepoReply{}, nil
 }
 func (s *RepoService) UpdateRepo(ctx context.Context, req *pb.UpdateRepoRequest) (*pb.UpdateRepoReply, error) {

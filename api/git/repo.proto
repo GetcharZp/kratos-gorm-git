@@ -8,7 +8,12 @@ option java_multiple_files = true;
 option java_package = "api.git";
 
 service Repo {
-	rpc CreateRepo (CreateRepoRequest) returns (CreateRepoReply);
+	rpc CreateRepo (CreateRepoRequest) returns (CreateRepoReply) {
+		option (google.api.http) = {
+			post: "/repo/create",
+			body: "*"
+		};
+	}
 	rpc UpdateRepo (UpdateRepoRequest) returns (UpdateRepoReply);
 	rpc DeleteRepo (DeleteRepoRequest) returns (DeleteRepoReply);
 	rpc GetRepo (GetRepoRequest) returns (GetRepoReply);
@@ -19,7 +24,12 @@ service Repo {
 	}
 }
 
-message CreateRepoRequest {}
+message CreateRepoRequest {
+	string name = 1;
+	string desc = 2;
+	string path = 3;
+	int32 type = 4; // 类型，{1:公库 0:私库}
+}
 message CreateRepoReply {}
 
 message UpdateRepoRequest {}

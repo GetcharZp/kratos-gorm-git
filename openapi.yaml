@@ -6,6 +6,30 @@ info:
     title: Repo API
     version: 0.0.1
 paths:
+    /repo/create:
+        post:
+            tags:
+                - Repo
+            operationId: Repo_CreateRepo
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/CreateRepoRequest'
+                required: true
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/CreateRepoReply'
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Status'
     /repo/list:
         get:
             tags:
@@ -37,6 +61,21 @@ paths:
                                 $ref: '#/components/schemas/Status'
 components:
     schemas:
+        CreateRepoReply:
+            type: object
+            properties: {}
+        CreateRepoRequest:
+            type: object
+            properties:
+                name:
+                    type: string
+                desc:
+                    type: string
+                path:
+                    type: string
+                type:
+                    type: integer
+                    format: int32
         GoogleProtobufAny:
             type: object
             properties:
