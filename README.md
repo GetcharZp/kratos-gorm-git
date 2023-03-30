@@ -52,7 +52,7 @@ kratos proto server api/git/repo.proto t internal/service
 - [ ] 仓库管理
   - [x] 仓库列表
   - [x] 新增仓库
-  - [ ] 修改仓库
+  - [x] 修改仓库
   - [ ] 删除仓库
   - [ ] 授权用户
 - [ ] 用户管理

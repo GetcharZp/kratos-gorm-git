@@ -21,15 +21,18 @@ const _ = http.SupportPackageIsVersion1
 
 const OperationRepoCreateRepo = "/api.git.Repo/CreateRepo"
 const OperationRepoListRepo = "/api.git.Repo/ListRepo"
+const OperationRepoUpdateRepo = "/api.git.Repo/UpdateRepo"
 
 type RepoHTTPServer interface {
 	CreateRepo(context.Context, *CreateRepoRequest) (*CreateRepoReply, error)
 	ListRepo(context.Context, *ListRepoRequest) (*ListRepoReply, error)
+	UpdateRepo(context.Context, *UpdateRepoRequest) (*UpdateRepoReply, error)
 }
 
 func RegisterRepoHTTPServer(s *http.Server, srv RepoHTTPServer) {
 	r := s.Route("/")
 	r.POST("/repo/create", _Repo_CreateRepo0_HTTP_Handler(srv))
+	r.PUT("/repo/update", _Repo_UpdateRepo0_HTTP_Handler(srv))
 	r.GET("/repo/list", _Repo_ListRepo0_HTTP_Handler(srv))
 }
 
@@ -48,6 +51,25 @@ func _Repo_CreateRepo0_HTTP_Handler(srv RepoHTTPServer) func(ctx http.Context) e
 			return err
 		}
 		reply := out.(*CreateRepoReply)
+		return ctx.Result(200, reply)
+	}
+}
+
+func _Repo_UpdateRepo0_HTTP_Handler(srv RepoHTTPServer) func(ctx http.Context) error {
+	return func(ctx http.Context) error {
+		var in UpdateRepoRequest
+		if err := ctx.Bind(&in); err != nil {
+			return err
+		}
+		http.SetOperation(ctx, OperationRepoUpdateRepo)
+		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
+			return srv.UpdateRepo(ctx, req.(*UpdateRepoRequest))
+		})
+		out, err := h(ctx, &in)
+		if err != nil {
+			return err
+		}
+		reply := out.(*UpdateRepoReply)
 		return ctx.Result(200, reply)
 	}
 }
@@ -74,6 +96,7 @@ func _Repo_ListRepo0_HTTP_Handler(srv RepoHTTPServer) func(ctx http.Context) err
 type RepoHTTPClient interface {
 	CreateRepo(ctx context.Context, req *CreateRepoRequest, opts ...http.CallOption) (rsp *CreateRepoReply, err error)
 	ListRepo(ctx context.Context, req *ListRepoRequest, opts ...http.CallOption) (rsp *ListRepoReply, err error)
+	UpdateRepo(ctx context.Context, req *UpdateRepoRequest, opts ...http.CallOption) (rsp *UpdateRepoReply, err error)
 }
 
 type RepoHTTPClientImpl struct {
@@ -104,6 +127,19 @@ func (c *RepoHTTPClientImpl) ListRepo(ctx context.Context, in *ListRepoRequest, 
 	opts = append(opts, http.Operation(OperationRepoListRepo))
 	opts = append(opts, http.PathTemplate(pattern))
 	err := c.cc.Invoke(ctx, "GET", path, nil, &out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return &out, err
+}
+
+func (c *RepoHTTPClientImpl) UpdateRepo(ctx context.Context, in *UpdateRepoRequest, opts ...http.CallOption) (*UpdateRepoReply, error) {
+	var out UpdateRepoReply
+	pattern := "/repo/update"
+	path := binding.EncodeURL(pattern, in, false)
+	opts = append(opts, http.Operation(OperationRepoUpdateRepo))
+	opts = append(opts, http.PathTemplate(pattern))
+	err := c.cc.Invoke(ctx, "PUT", path, in, &out, opts...)
 	if err != nil {
 		return nil, err
 	}

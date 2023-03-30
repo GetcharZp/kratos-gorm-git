@@ -14,7 +14,12 @@ service Repo {
 			body: "*"
 		};
 	}
-	rpc UpdateRepo (UpdateRepoRequest) returns (UpdateRepoReply);
+	rpc UpdateRepo (UpdateRepoRequest) returns (UpdateRepoReply) {
+		option (google.api.http) = {
+			put: "/repo/update",
+			body: "*"
+		};
+	}
 	rpc DeleteRepo (DeleteRepoRequest) returns (DeleteRepoReply);
 	rpc GetRepo (GetRepoRequest) returns (GetRepoReply);
 	rpc ListRepo (ListRepoRequest) returns (ListRepoReply) {
@@ -32,7 +37,12 @@ message CreateRepoRequest {
 }
 message CreateRepoReply {}
 
-message UpdateRepoRequest {}
+message UpdateRepoRequest {
+	string identity = 1;
+	string name = 2;
+	string desc = 3;
+	int32 type = 4; // 类型，{1:公库 0:私库}
+}
 message UpdateRepoReply {}
 
 message DeleteRepoRequest {}

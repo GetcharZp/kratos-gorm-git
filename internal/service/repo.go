@@ -41,6 +41,14 @@ func (s *RepoService) CreateRepo(ctx context.Context, req *pb.CreateRepoRequest)
 	return &pb.CreateRepoReply{}, nil
 }
 func (s *RepoService) UpdateRepo(ctx context.Context, req *pb.UpdateRepoRequest) (*pb.UpdateRepoReply, error) {
+	err := models.DB.Model(new(models.RepoBasic)).Where("identity = ?", req.Identity).Updates(map[string]interface{}{
+		"name": req.Name,
+		"desc": req.Desc,
+		"type": req.Type,
+	}).Error
+	if err != nil {
+		return nil, err
+	}
 	return &pb.UpdateRepoReply{}, nil
 }
 func (s *RepoService) DeleteRepo(ctx context.Context, req *pb.DeleteRepoRequest) (*pb.DeleteRepoReply, error) {
