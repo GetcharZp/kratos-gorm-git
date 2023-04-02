@@ -3,6 +3,7 @@ package main
 import (
 	"flag"
 	"github.com/go-kratos/kratos/v2"
+	"kratos-gorm-git/define"
 	"kratos-gorm-git/models"
 	"os"
 
@@ -79,6 +80,8 @@ func main() {
 	if err != nil {
 		panic(err)
 	}
+
+	define.RepoPath = bc.Server.RepoPath
 
 	app, cleanup, err := wireApp(bc.Server, bc.Data, logger)
 	if err != nil {

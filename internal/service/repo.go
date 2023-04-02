@@ -3,9 +3,13 @@ package service
 import (
 	"context"
 	"errors"
+	"gorm.io/gorm"
 	pb "kratos-gorm-git/api/git"
+	"kratos-gorm-git/define"
 	"kratos-gorm-git/helper"
 	"kratos-gorm-git/models"
+	"os"
+	"os/exec"
 )
 
 type RepoService struct {
@@ -34,10 +38,30 @@ func (s *RepoService) CreateRepo(ctx context.Context, req *pb.CreateRepoRequest)
 		Desc:     req.Desc,
 		Type:     int(req.Type),
 	}
-	err = models.DB.Create(rb).Error
+	err = models.DB.Transaction(func(tx *gorm.DB) error {
+		err = tx.Create(rb).Error
+		if err != nil {
+			return err
+		}
+		// init repo path
+		// mkdir path
+		gitRepoPath := define.RepoPath + string(os.PathSeparator) + req.Path
+		err = os.MkdirAll(gitRepoPath, 0755)
+		if err != nil {
+			return err
+		}
+		// git init --bare
+		cmd := exec.Command("/bin/bash", "-c", "cd "+gitRepoPath+" ; git init --bare")
+		err = cmd.Run()
+		if err != nil {
+			return err
+		}
+		return nil
+	})
 	if err != nil {
 		return nil, err
 	}
+
 	return &pb.CreateRepoReply{}, nil
 }
 func (s *RepoService) UpdateRepo(ctx context.Context, req *pb.UpdateRepoRequest) (*pb.UpdateRepoReply, error) {

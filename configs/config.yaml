@@ -5,6 +5,7 @@ server:
   grpc:
     addr: 0.0.0.0:9000
     timeout: 1s
+  repo_path: /Users/getcharzp/Desktop/home/work/myself/git/gitee/kratos-gorm-git/repo
 data:
   database:
     driver: mysql

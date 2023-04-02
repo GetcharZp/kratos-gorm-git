@@ -45,6 +45,15 @@ kratos proto add api/git/repo.proto
 kratos proto client api/git/repo.proto
 # 生成 Service
 kratos proto server api/git/repo.proto t internal/service
+
+# config init pb
+kratos proto client internal/conf/conf.proto
+```
+
+## 核心扩展
+
+```shell
+go get github.com/asim/git-http-backend
 ```
 
 ## 系统模块
@@ -60,6 +69,8 @@ kratos proto server api/git/repo.proto t internal/service
 - [ ] Star管理
   - [ ] Star项目列表
 - [ ] GIT服务
+  - [x] 新建仓库
+  - [ ] git-http-backend
 
 ## 快速体验GIT远程仓库
 
