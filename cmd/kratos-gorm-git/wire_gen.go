@@ -7,12 +7,15 @@
 package main
 
 import (
+	"kratos-gorm-git/define"
 	"kratos-gorm-git/internal/biz"
 	"kratos-gorm-git/internal/conf"
 	"kratos-gorm-git/internal/data"
 	"kratos-gorm-git/internal/server"
 	"kratos-gorm-git/internal/service"
+	"net/http"
 
+	server2 "github.com/asim/git-http-backend/server"
 	"github.com/go-kratos/kratos/v2"
 	"github.com/go-kratos/kratos/v2/log"
 )
@@ -30,6 +33,11 @@ func wireApp(confServer *conf.Server, confData *conf.Data, logger log.Logger) (*
 	greeterService := service.NewGreeterService(greeterUsecase)
 	grpcServer := server.NewGRPCServer(confServer, greeterService, logger)
 	httpServer := server.NewHTTPServer(confServer, greeterService, logger)
+	// 1. 指定仓库地址
+	server2.DefaultConfig.ProjectRoot = define.RepoPath
+	server2.DefaultConfig.GitBinPath = "/usr/bin/git"
+	// 2. 指定监听的服务
+	http.HandleFunc("/git/", service.GitHttpBackend)
 	app := newApp(logger, grpcServer, httpServer)
 	return app, func() {
 		cleanup()

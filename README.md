@@ -68,9 +68,9 @@ go get github.com/asim/git-http-backend
   - [x] 登录
 - [ ] Star管理
   - [ ] Star项目列表
-- [ ] GIT服务
+- [x] GIT服务
   - [x] 新建仓库
-  - [ ] git-http-backend
+  - [x] git-http-backend
 
 ## 快速体验GIT远程仓库
 
@@ -109,3 +109,4 @@ git daemon --export-all --verbose --base-path=. --export-all --port=9091 --enabl
 ```
 
 2. 使用http-backend
++ demo地址： git clone http://127.0.0.1:8000/git/up-zero/up-git.git
