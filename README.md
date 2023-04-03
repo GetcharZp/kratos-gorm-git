@@ -62,15 +62,14 @@ go get github.com/asim/git-http-backend
   - [x] 仓库列表
   - [x] 新增仓库
   - [x] 修改仓库
-  - [ ] 删除仓库
+  - [x] 删除仓库
   - [ ] 授权用户
 - [ ] 用户管理
   - [x] 登录
-- [ ] Star管理
-  - [ ] Star项目列表
 - [x] GIT服务
   - [x] 新建仓库
   - [x] git-http-backend
+  - [ ] 鉴权
 
 ## 快速体验GIT远程仓库
 

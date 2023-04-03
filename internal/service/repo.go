@@ -76,6 +76,29 @@ func (s *RepoService) UpdateRepo(ctx context.Context, req *pb.UpdateRepoRequest)
 	return &pb.UpdateRepoReply{}, nil
 }
 func (s *RepoService) DeleteRepo(ctx context.Context, req *pb.DeleteRepoRequest) (*pb.DeleteRepoReply, error) {
+	// 1. 获取仓库的基础信息
+	var rb = new(models.RepoBasic)
+	err := models.DB.Model(new(models.RepoBasic)).Where("identity = ?", req.Identity).First(rb).Error
+	if err != nil {
+		return nil, err
+	}
+	// 2. 删除记录
+	err = models.DB.Transaction(func(tx *gorm.DB) error {
+		// 2.1 删除仓库数据
+		err = os.RemoveAll(define.RepoPath + string(os.PathSeparator) + rb.Path)
+		if err != nil {
+			return err
+		}
+		// 2.2 删除DB记录
+		err = tx.Where("identity = ?", req.Identity).Delete(new(models.RepoBasic)).Error
+		if err != nil {
+			return err
+		}
+		return nil
+	})
+	if err != nil {
+		return nil, err
+	}
 	return &pb.DeleteRepoReply{}, nil
 }
 func (s *RepoService) GetRepo(ctx context.Context, req *pb.GetRepoRequest) (*pb.GetRepoReply, error) {
