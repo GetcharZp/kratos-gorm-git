@@ -24,6 +24,7 @@ const (
 	Repo_DeleteRepo_FullMethodName = "/api.git.Repo/DeleteRepo"
 	Repo_GetRepo_FullMethodName    = "/api.git.Repo/GetRepo"
 	Repo_ListRepo_FullMethodName   = "/api.git.Repo/ListRepo"
+	Repo_RepoAuth_FullMethodName   = "/api.git.Repo/RepoAuth"
 )
 
 // RepoClient is the client API for Repo service.
@@ -35,6 +36,7 @@ type RepoClient interface {
 	DeleteRepo(ctx context.Context, in *DeleteRepoRequest, opts ...grpc.CallOption) (*DeleteRepoReply, error)
 	GetRepo(ctx context.Context, in *GetRepoRequest, opts ...grpc.CallOption) (*GetRepoReply, error)
 	ListRepo(ctx context.Context, in *ListRepoRequest, opts ...grpc.CallOption) (*ListRepoReply, error)
+	RepoAuth(ctx context.Context, in *RepoAuthRequest, opts ...grpc.CallOption) (*RepoAuthReply, error)
 }
 
 type repoClient struct {
@@ -90,6 +92,15 @@ func (c *repoClient) ListRepo(ctx context.Context, in *ListRepoRequest, opts ...
 	return out, nil
 }
 
+func (c *repoClient) RepoAuth(ctx context.Context, in *RepoAuthRequest, opts ...grpc.CallOption) (*RepoAuthReply, error) {
+	out := new(RepoAuthReply)
+	err := c.cc.Invoke(ctx, Repo_RepoAuth_FullMethodName, in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // RepoServer is the server API for Repo service.
 // All implementations must embed UnimplementedRepoServer
 // for forward compatibility
@@ -99,6 +110,7 @@ type RepoServer interface {
 	DeleteRepo(context.Context, *DeleteRepoRequest) (*DeleteRepoReply, error)
 	GetRepo(context.Context, *GetRepoRequest) (*GetRepoReply, error)
 	ListRepo(context.Context, *ListRepoRequest) (*ListRepoReply, error)
+	RepoAuth(context.Context, *RepoAuthRequest) (*RepoAuthReply, error)
 	mustEmbedUnimplementedRepoServer()
 }
 
@@ -120,6 +132,9 @@ func (UnimplementedRepoServer) GetRepo(context.Context, *GetRepoRequest) (*GetRe
 }
 func (UnimplementedRepoServer) ListRepo(context.Context, *ListRepoRequest) (*ListRepoReply, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method ListRepo not implemented")
+}
+func (UnimplementedRepoServer) RepoAuth(context.Context, *RepoAuthRequest) (*RepoAuthReply, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method RepoAuth not implemented")
 }
 func (UnimplementedRepoServer) mustEmbedUnimplementedRepoServer() {}
 
@@ -224,6 +239,24 @@ func _Repo_ListRepo_Handler(srv interface{}, ctx context.Context, dec func(inter
 	return interceptor(ctx, in, info, handler)
 }
 
+func _Repo_RepoAuth_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(RepoAuthRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(RepoServer).RepoAuth(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Repo_RepoAuth_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(RepoServer).RepoAuth(ctx, req.(*RepoAuthRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // Repo_ServiceDesc is the grpc.ServiceDesc for Repo service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -250,6 +283,10 @@ var Repo_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "ListRepo",
 			Handler:    _Repo_ListRepo_Handler,
+		},
+		{
+			MethodName: "RepoAuth",
+			Handler:    _Repo_RepoAuth_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

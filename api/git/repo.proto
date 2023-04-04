@@ -31,6 +31,12 @@ service Repo {
 			get: "/repo/list",
 		};
 	}
+	rpc RepoAuth (RepoAuthRequest) returns (RepoAuthReply) {
+		option (google.api.http) = {
+			post: "/repo/auth",
+			body: "*"
+		};
+	}
 }
 
 message CreateRepoRequest {
@@ -73,3 +79,10 @@ message ListRepoItem {
 	string path = 4;
 	int64 star = 5;
 }
+
+message RepoAuthRequest {
+	string repo_identity = 1;
+	string user_identity = 2;
+}
+
+message RepoAuthReply {}
