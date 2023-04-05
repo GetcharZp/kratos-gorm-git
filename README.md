@@ -69,7 +69,7 @@ go get github.com/asim/git-http-backend
 - [x] GIT服务
   - [x] 新建仓库
   - [x] git-http-backend
-  - [ ] 鉴权
+  - [x] 鉴权
 
 ## 快速体验GIT远程仓库
 
