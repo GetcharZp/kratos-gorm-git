@@ -5,6 +5,8 @@
 > kratos 参考文档：https://go-kratos.dev/
 > 
 > gorm 参考文档：https://gorm.io/zh_CN/docs/
+> 
+> B 站视频教程：https://www.bilibili.com/video/BV17Y4y1y7jt/
 
 ## 同类产品
 
